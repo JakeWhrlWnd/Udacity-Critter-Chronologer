@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.service;
 import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.EmployeeSkill;
+import com.udacity.jdnd.course3.critter.exception.EmployeeNotFoundException;
 import com.udacity.jdnd.course3.critter.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class EmployeeService {
 
     public Employee getEmployee(long employeeId) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        return optionalEmployee.orElseThrow(EmptyStackException::new);
+        return optionalEmployee.orElseThrow(EmployeeNotFoundException::new);
     }
 
     public void setAvailability(Set<DayOfWeek> daysAvailable, long employeeId) {

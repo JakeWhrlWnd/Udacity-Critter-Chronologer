@@ -28,6 +28,5 @@ public class Customer implements Serializable {
 
 
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
-
     private List<Pet> pets;
 }

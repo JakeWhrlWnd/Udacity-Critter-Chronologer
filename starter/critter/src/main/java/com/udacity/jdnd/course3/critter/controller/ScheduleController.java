@@ -4,7 +4,10 @@ import com.udacity.jdnd.course3.critter.dto.ScheduleDTO;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.entity.Schedule;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.service.ScheduleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,64 +23,66 @@ public class ScheduleController {
 
     @Autowired
     private ScheduleService scheduleService;
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private PetService petService;
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        Schedule schedule = new Schedule();
-        schedule.setDate(scheduleDTO.getDate());
-        schedule.setActivities(scheduleDTO.getActivities());
-        schedule = scheduleService.save(schedule, scheduleDTO.getEmployeeIds(), scheduleDTO.getPetIds());
-        return copyScheduleToScheduleDTO(schedule);
+        Schedule schedule = scheduleService.createSchedule(convertToSchedule(scheduleDTO));
+        return convertToScheduleDTO(schedule);
     }
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
-        List<Schedule> schedules = scheduleService.findAllSchedules();
-        List<ScheduleDTO> scheduleDTOs = null;
-        if (schedules != null) {
-            scheduleDTOs = schedules.stream().map(this::copyScheduleToScheduleDTO).collect(Collectors.toList());
-        }
-        return scheduleDTOs;
+        return convertToScheduleDTOList(scheduleService.getAllSchedules());
     }
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        List<Schedule> schedules = scheduleService.findPetSchedules(petId);
-        List<ScheduleDTO> scheduleDTOs = null;
-        if (schedules != null) {
-            scheduleDTOs = schedules.stream().map(this::copyScheduleToScheduleDTO).collect(Collectors.toList());
-        }
-        return scheduleDTOs;
-
+        return convertToScheduleDTOList(scheduleService.getScheduleForPet(petId));
     }
 
     @GetMapping("/employee/{employeeId}")
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        List<Schedule> schedules = scheduleService.findEmployeeSchedules(employeeId);
-        List<ScheduleDTO> scheduleDTOs = null;
-        if (schedules != null) {
-            scheduleDTOs = schedules.stream().map(this::copyScheduleToScheduleDTO).collect(Collectors.toList());
-        }
-        return scheduleDTOs;
+        return convertToScheduleDTOList(scheduleService.getScheduleForEmployee(employeeId));
     }
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        List<Schedule> schedules = scheduleService.findCustomerSchedules(customerId);
-        List<ScheduleDTO> scheduleDTOs = null;
-        if (schedules != null) {
-            scheduleDTOs = schedules.stream().map(this::copyScheduleToScheduleDTO).collect(Collectors.toList());
-        }
-        return scheduleDTOs;
+        return convertToScheduleDTOList(scheduleService.getScheduleForCustomer(customerId));
     }
 
-    public ScheduleDTO copyScheduleToScheduleDTO(Schedule schedule) {
+    public Schedule convertToSchedule(ScheduleDTO scheduleDTO) {
+        Schedule schedule = new Schedule();
+        BeanUtils.copyProperties(scheduleDTO, schedule);
+        if (scheduleDTO.getEmployeeIds() != null) {
+            List<Employee> employees = scheduleDTO.getEmployeeIds().stream().map(id -> employeeService.getEmployee(id)).collect(Collectors.toList());
+            schedule.setEmployees(employees);
+        }
+        if (scheduleDTO.getPetIds() != null) {
+            List<Pet> pets = scheduleDTO.getPetIds().stream().map(id -> petService.getPet(id)).collect(Collectors.toList());
+            schedule.setPets(pets);
+        }
+        return schedule;
+    }
+
+    public ScheduleDTO convertToScheduleDTO(Schedule schedule) {
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setId(schedule.getId());
-        scheduleDTO.setEmployeeIds(schedule.getEmployees().stream().map(Employee::getId).collect(Collectors.toList()));
-        scheduleDTO.setPetIds(schedule.getPets().stream().map(Pet::getId).collect(Collectors.toList()));
-        scheduleDTO.setDate(schedule.getDate());
-        scheduleDTO.setActivities(schedule.getActivities());
+        BeanUtils.copyProperties(schedule, scheduleDTO);
+        if (schedule.getEmployees() != null) {
+            List<Long> employeeIds = schedule.getEmployees().stream().map(Employee::getId).collect(Collectors.toList());
+            scheduleDTO.setEmployeeIds(employeeIds);
+        }
+        if (schedule.getPets() != null) {
+            List<Long> petIds = schedule.getPets().stream().map(Pet::getId).collect(Collectors.toList());
+            scheduleDTO.setPetIds(petIds);
+        }
         return scheduleDTO;
+    }
+
+    public List<ScheduleDTO> convertToScheduleDTOList(List<Schedule> scheduleList) {
+        return scheduleList.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
     }
 }

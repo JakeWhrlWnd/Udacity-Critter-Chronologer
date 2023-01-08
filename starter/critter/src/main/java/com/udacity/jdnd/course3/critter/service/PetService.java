@@ -2,51 +2,50 @@ package com.udacity.jdnd.course3.critter.service;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
+import com.udacity.jdnd.course3.critter.exception.PetNotFoundException;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PetService {
 
     @Autowired
     private PetRepository petRepository;
     @Autowired
     private CustomerService customerService;
-    @Autowired
-    private CustomerRepository customerRepository;
 
-
-    @Transactional
-    public Optional<Pet> find(Long id) {
-        return petRepository.findById(id);
+    public Pet savePet(long ownerId, Pet pet) {
+        // get owner with given id and set owner in Pet, then save Pet
+        Customer owner = customerService.getCustomer(ownerId);
+        pet.setCustomer(owner);
+        Pet savedPet = petRepository.save(pet);
+        // now we need to add savedPet to the list of pets in owner then update owner (save method updates when entity has id)
+        List<Pet> ownerPets = owner.getPets();
+        if (ownerPets == null)
+            ownerPets = new ArrayList<>();
+        ownerPets.add(savedPet);
+        owner.setPets(ownerPets);
+        customerService.saveCustomer(owner);
+        return savedPet;
     }
 
-    public List<Pet> findAll() {
+    public Pet getPet(long id) {
+        Optional<Pet> optionalPet = petRepository.findById(id);
+        return optionalPet.orElseThrow(PetNotFoundException::new);
+    }
+
+    public List<Pet> getPets() {
         return petRepository.findAll();
     }
 
-    public List<Pet> getPetsByCustomerId(long customerId) {
-        return petRepository.findAllByCustomerId(customerId);
-    }
-
-
-    public Pet savePetWithOwnerId(Pet pet, long ownerId) {
-        Optional<Customer> customerOptional = customerRepository.findById(ownerId);
-        if (customerOptional.isPresent()) {
-            Customer customer = customerOptional.get();
-            pet.setCustomer(customer);
-            pet = petRepository.save(pet);
-            customer.getPets().add(pet);
-            customerRepository.save(customer);
-        }
-
-
-        return pet;
+    public List<Pet> getPetsByOwner(long ownerId) {
+        return customerService.getCustomer(ownerId).getPets();
     }
 }

@@ -1,6 +1,5 @@
 package com.udacity.jdnd.course3.critter.entity;
 
-import com.udacity.jdnd.course3.critter.pet.PetType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -2,7 +2,7 @@ package com.udacity.jdnd.course3.critter.controller;
 
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.dto.PetDTO;
-import com.udacity.jdnd.course3.critter.schedule.PetService;
+import com.udacity.jdnd.course3.critter.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +44,7 @@ public class PetController {
         List<Pet> pets = petService.findAll();
         List<PetDTO> petDTOs = null;
         if (pets != null) {
-            petDTOs = pets.stream().map(x -> copyPetToDTO(x)).collect(Collectors.toList());
+            petDTOs = pets.stream().map(this::copyPetToDTO).collect(Collectors.toList());
         }
         return petDTOs;
     }
@@ -55,7 +55,7 @@ public class PetController {
         List<PetDTO> petDTOs = null;
 
         if (pets != null) {
-            petDTOs = pets.stream().map(x -> copyPetToDTO(x)).collect(Collectors.toList());
+            petDTOs = pets.stream().map(this::copyPetToDTO).collect(Collectors.toList());
         }
         return petDTOs;
     }

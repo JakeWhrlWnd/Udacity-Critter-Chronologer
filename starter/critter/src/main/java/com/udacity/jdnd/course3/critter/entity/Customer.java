@@ -1,6 +1,5 @@
 package com.udacity.jdnd.course3.critter.entity;
 
-import com.udacity.jdnd.course3.critter.entity.Pet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Nationalized;
@@ -8,6 +7,7 @@ import org.hibernate.annotations.Nationalized;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+
 @Entity
 @Table
 @Data
@@ -16,12 +16,18 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @Nationalized
-    @Column(length = 500)
+    @Column(length=500)
     private String name;
+
     private String phoneNumber;
-    @Column(length = 5000)
+
+    @Column(length=5000)
     private String notes;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+
+
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+
     private List<Pet> pets;
 }

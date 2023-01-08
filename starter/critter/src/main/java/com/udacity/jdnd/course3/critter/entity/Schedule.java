@@ -19,13 +19,17 @@ public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @ManyToMany
     @LazyCollection(LazyCollectionOption.TRUE)
     private List<Employee> employees;
+
     @ManyToMany
     @LazyCollection(LazyCollectionOption.TRUE)
     private List<Pet> pets;
+
     private LocalDate date;
+
     @ElementCollection
     private Set<EmployeeSkill> activities;
 }

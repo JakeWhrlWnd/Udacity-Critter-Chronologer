@@ -1,9 +1,7 @@
-package com.udacity.jdnd.course3.critter.service;
+package com.udacity.jdnd.course3.critter.pet;
 
-import com.udacity.jdnd.course3.critter.entity.Customer;
-import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.exception.PetNotFoundException;
-import com.udacity.jdnd.course3.critter.repository.PetRepository;
+import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.user.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,7 @@ public class PetService {
     public Pet savePet(long ownerId, Pet pet) {
         // get owner with given id and set owner in Pet, then save Pet
         Customer owner = customerService.getCustomer(ownerId);
-        pet.setCustomer(owner);
+        pet.setOwner(owner);
         Pet savedPet = petRepository.save(pet);
         // now we need to add savedPet to the list of pets in owner then update owner (save method updates when entity has id)
         List<Pet> ownerPets = owner.getPets();

@@ -1,4 +1,6 @@
-package com.udacity.jdnd.course3.critter.entity;
+package com.udacity.jdnd.course3.critter.pet;
+
+import com.udacity.jdnd.course3.critter.user.Customer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,7 +14,7 @@ public class Pet {
     private PetType type;
     private String name;
     @ManyToOne
-    private Customer customer;
+    private Customer owner;
     private LocalDate birthDate;
     private String notes;
 
@@ -40,12 +42,12 @@ public class Pet {
         this.name = name;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Customer getOwner() {
+        return owner;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setOwner(Customer owner) {
+        this.owner = owner;
     }
 
     public LocalDate getBirthDate() {

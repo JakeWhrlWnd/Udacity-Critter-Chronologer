@@ -1,8 +1,6 @@
-package com.udacity.jdnd.course3.critter.service;
+package com.udacity.jdnd.course3.critter.user;
 
-import com.udacity.jdnd.course3.critter.entity.Customer;
-import com.udacity.jdnd.course3.critter.exception.CustomerNotFoundException;
-import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
+import com.udacity.jdnd.course3.critter.pet.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +31,6 @@ public class CustomerService {
     }
 
     public Customer getOwnerByPet(long petId) {
-        return petService.getPet(petId).getCustomer();
+        return petService.getPet(petId).getOwner();
     }
 }

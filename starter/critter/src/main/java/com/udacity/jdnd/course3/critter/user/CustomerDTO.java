@@ -1,4 +1,4 @@
-package com.udacity.jdnd.course3.critter.dto;
+package com.udacity.jdnd.course3.critter.user;
 
 import java.util.List;
 

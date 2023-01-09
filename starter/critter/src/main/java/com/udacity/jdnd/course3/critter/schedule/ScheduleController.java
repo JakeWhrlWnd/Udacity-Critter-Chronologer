@@ -1,12 +1,12 @@
-package com.udacity.jdnd.course3.critter.controller;
+package com.udacity.jdnd.course3.critter.schedule;
 
-import com.udacity.jdnd.course3.critter.dto.ScheduleDTO;
-import com.udacity.jdnd.course3.critter.entity.Employee;
-import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.entity.Schedule;
-import com.udacity.jdnd.course3.critter.service.EmployeeService;
-import com.udacity.jdnd.course3.critter.service.PetService;
-import com.udacity.jdnd.course3.critter.service.ScheduleService;
+import com.udacity.jdnd.course3.critter.schedule.ScheduleDTO;
+import com.udacity.jdnd.course3.critter.user.Employee;
+import com.udacity.jdnd.course3.critter.pet.Pet;
+import com.udacity.jdnd.course3.critter.schedule.Schedule;
+import com.udacity.jdnd.course3.critter.user.EmployeeService;
+import com.udacity.jdnd.course3.critter.pet.PetService;
+import com.udacity.jdnd.course3.critter.schedule.ScheduleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

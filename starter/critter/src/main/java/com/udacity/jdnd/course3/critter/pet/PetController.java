@@ -1,8 +1,5 @@
-package com.udacity.jdnd.course3.critter.controller;
+package com.udacity.jdnd.course3.critter.pet;
 
-import com.udacity.jdnd.course3.critter.dto.PetDTO;
-import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.service.PetService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +48,7 @@ public class PetController {
     public PetDTO convertToPetDTO(Pet pet) {
         PetDTO petDTO = new PetDTO();
         BeanUtils.copyProperties(pet, petDTO);
-        if (pet.getCustomer() != null) petDTO.setOwnerId(pet.getCustomer().getId());
+        if (pet.getOwner() != null) petDTO.setOwnerId(pet.getOwner().getId());
         return petDTO;
     }
 
